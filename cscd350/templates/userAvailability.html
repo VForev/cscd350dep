@@ -1,0 +1,211 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Parking Availability</title>
+    <link rel="stylesheet" href="https://www.w3schools.com/w3css/4/w3.css">
+    <link rel="stylesheet" href="https://www.w3schools.com/lib/w3-theme-black.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
+    <link rel="stylesheet" href="{{ url_for('static', filename='styles.css') }}">
+    <link rel="icon" type="image/png" sizes="256x256" href="ParkSmart.png">
+    <style>
+
+        .search-container {
+            flex: 1;
+            display: inline-block;
+            padding-top: 45px;
+            justify-content: center;
+            padding-bottom: 10px;
+            text-align: center;
+        }
+
+        .search-input {
+            padding: 8px 10px;
+            font-size: 16px;
+            width: 50%;
+
+        }
+
+        .lot-section {
+            padding: 20px;
+            margin-bottom: 30px;
+            border-radius: 5px;
+            text-align: center;
+            user-select: none;
+        }
+
+        .lot-section h2 {
+            color: #333;
+        }
+
+        .grid {
+            display: grid;
+            grid-gap: 5px;
+            grid-template-columns: repeat(auto-fill, minmax(100px, 1fr));
+            justify-content: center;
+            margin-bottom: 20px;
+        }
+
+        @media (min-width: 1024px) {
+            .grid {
+                grid-template-columns: repeat(10, 100px);
+            }
+        }
+        .w3-bar-block {
+            position: sticky;
+            top: 38px;
+            width: 100%;
+            z-index: 1000;
+
+        }
+
+        .spot {
+            width: 100px;
+            height: 150px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            cursor: pointer;
+            font-weight: bold;
+            border-radius: 4px;
+            user-select: none;
+            color: #333;
+        }
+
+        .spot:nth-child(20n) {
+            margin-bottom: 30px; /* This will add a large gap after every 20th spot */
+        }
+
+        .spot.available {
+            background-color: #4caf50;
+        }
+
+        .spot.reserved {
+            background-color: #f44336;
+            cursor: default;
+        }
+
+        .spot.selected {
+            background-color: #ffc107;
+        }
+
+        #reservation-section {
+            width: auto;
+            position: sticky;
+            bottom: 0;
+            background: #030303;
+            padding: 10px;
+            margin-left: -20px;
+            margin-right: -20px;
+            margin-bottom: -20px;
+            text-align: center;
+            border-radius: 0;
+        }
+
+        html, body {
+            height: 100%;
+            margin: 0;
+        }
+
+        nav ul li a {
+            display: block;
+            text-align: center;
+            padding: 5px;
+        }
+    </style>
+</head>
+<body>
+
+<div id="navDemo" class="w3-bar-block w3-theme-d2 w3-hide w3-hide-large w3-hide-medium">
+    <a href="index.html#team" class="w3-bar-item w3-button">Team</a>
+    <a href="index.html#services" class="w3-bar-item w3-button">Services</a>
+    <a href="index.html#contact" class="w3-bar-item w3-button">Contact</a>
+    <a href="availability.html" class="w3-bar-item w3-button">Parking Availability</a>
+    <a href="userProfile.html" class="w3-bar-item w3-button">Hello, {{ username }}</a>
+</div>
+
+<div class="w3-top">
+    <div class="w3-bar w3-theme-d2 w3-left-align">
+        <a class="w3-bar-item w3-button w3-hide-medium w3-hide-large w3-right w3-hover-white w3-theme-d2" href="javascript:void(0);" onclick="openNav()"><i class="fa fa-bars"></i></a>
+        <a href="index.html" class="w3-bar-item w3-button w3-teal"><i class="fa fa-home"></i></a>
+        <a href="index.html#team" class="w3-bar-item w3-button w3-hide-small w3-hover-white">Team</a>
+        <a href="index.html#services" class="w3-bar-item w3-button w3-hide-small w3-hover-white">Services</a>
+        <a href="index.html#contact" class="w3-bar-item w3-button w3-hide-small w3-hover-white">Contact</a>
+        <a href="availability.html" class="w3-bar-item w3-button w3-hide-small w3-hover-white">Parking Availability</a>
+        <a href="userProfile.html" class="w3-bar-item w3-button w3-hide-small w3-hover-white">Hello, {{ username }}</a>
+    </div>
+</div>
+<div class="search-container">
+    <input class="search-input" placeholder="Search for a lot...">
+</div>
+<main>
+    <section class="grid" id="parking-grid"></section>
+    <section id="reservation-section">
+        <button id="reserve-button" class="w3-button w3-teal">Reserve</button>
+    </section>
+</main>
+<!-- Footer -->
+<footer class="w3-container w3-theme-d1 w3-center">
+    <p>@2024 Online Parking. All rights not reserved.</p>
+    <p>Powered by <a href="https://www.w3schools.com/w3css/default.asp" target="_blank">w3.css</a></p>
+    <div style="position:relative;bottom:100px;z-index:1;" class="w3-tooltip w3-right">
+        <span class="w3-text w3-padding w3-teal w3-hide-small">Go To Top</span>
+        <a class="w3-button w3-theme" href="availability.html"><span class="w3-xlarge"><i class="fa fa-chevron-circle-up"></i></span></a>
+    </div>
+</footer>
+<script src="../static/app.js"></script>
+<!--<script>-->
+<!--    document.addEventListener('DOMContentLoaded', function() {-->
+<!--        const parkingGrid = document.getElementById('parking-grid');-->
+<!--        const reserveButton = document.getElementById('reserve-button');-->
+<!--        let selectedSpot = null;-->
+
+<!--        // Function to check if a spot is reserved-->
+<!--        function isReserved(spotId, reservedSpots) {-->
+<!--            return reservedSpots.includes(spotId);-->
+<!--        }-->
+
+<!--        // Generate parking spots-->
+<!--        fetch('/reserved_spots') // Fetch reserved spots-->
+<!--            .then(response => response.json())-->
+<!--            .then(reservedSpots => {-->
+<!--                for (let i = 1; i <= 50; i++) {-->
+<!--                    const spot = document.createElement('div');-->
+<!--                    spot.classList.add('spot');-->
+<!--                    spot.textContent = `Spot ${i}`;-->
+<!--                    spot.dataset.spotId = i;-->
+
+<!--                    if (isReserved(i, reservedSpots)) { // Check if spot is reserved-->
+<!--                        spot.classList.add('reserved');-->
+<!--                    } else {-->
+<!--                        spot.classList.add('available');-->
+<!--                        spot.addEventListener('click', function() {-->
+<!--                            if (spot.classList.contains('reserved')) return;-->
+<!--                            if (selectedSpot) {-->
+<!--                                selectedSpot.classList.remove('selected');-->
+<!--                            }-->
+<!--                            selectedSpot = spot;-->
+<!--                            spot.classList.add('selected');-->
+<!--                        });-->
+<!--                    }-->
+
+<!--                    parkingGrid.appendChild(spot);-->
+<!--                }-->
+<!--            });-->
+
+<!--        reserveButton.addEventListener('click', function() {-->
+<!--            if (!selectedSpot) {-->
+<!--                alert('Please select a spot to reserve.');-->
+<!--                return;-->
+<!--            }-->
+
+<!--            const spotId = selectedSpot.dataset.spotId;-->
+<!--            localStorage.setItem('selectedSpotId', spotId);-->
+<!--            window.location.href = '/checkout';-->
+<!--        });-->
+<!--    });-->
+<!--  </script>-->
+
+</body>
+</html>

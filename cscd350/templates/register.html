@@ -1,0 +1,176 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Register - ParkSmart</title>
+    <link rel="stylesheet" href="https://www.w3schools.com/w3css/4/w3.css">
+    <link rel="stylesheet" href="https://www.w3schools.com/lib/w3-theme-black.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
+    <link rel="icon" type="image/png" sizes="256x256" href="ParkSmart.png">
+    <link rel="stylesheet" href="{{ url_for('static', filename='styles.css') }}">
+
+    <style>
+        .register-container {
+            background-color: white;
+            padding: 20px;
+            border-radius: 10px;
+            box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+            width: 100%;
+            max-width: 500px;
+            margin: 75px auto;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            text-align: center;
+        }
+
+        .register-container h2 {
+            margin-bottom: 20px;
+        }
+
+        .form-columns {
+            display: flex;
+            justify-content: space-between;
+            width: 100%;
+        }
+
+        .form-column {
+            display: flex;
+            flex-direction: column;
+            width: 48%;
+        }
+
+        .form-column input,
+        .form-column select {
+            width: 100%;
+            padding: 10px;
+            margin: 10px 0;
+            border: 1px solid #ccc;
+            border-radius: 5px;
+        }
+
+        .register-container button {
+            width: 100%;
+            padding: 10px;
+            background-color: #007bff;
+            color: white;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+            margin-top: 20px;
+        }
+
+        .register-container button:hover {
+            background-color: #0056b3;
+        }
+
+        .register-container a {
+            display: block;
+            margin-top: 10px;
+            color: #007bff;
+            text-decoration: none;
+        }
+
+        .register-container a:hover {
+            text-decoration: underline;
+        }
+
+        .visually-hidden {
+            position: absolute;
+            width: 1px;
+            height: 1px;
+            margin: -1px;
+            padding: 0;
+            overflow: hidden;
+            clip: rect(0, 0, 0, 0);
+            border: 0;
+        }
+    </style>
+</head>
+<body>
+    <div class="w3-top">
+        <div class="w3-bar w3-theme-d2 w3-left-align">
+            <a class="w3-bar-item w3-button w3-hide-medium w3-hide-large w3-right w3-hover-white w3-theme-d2" href="javascript:void(0);" onclick="openNav()"><i class="fa fa-bars"></i></a>
+            <a href="index.html" class="w3-bar-item w3-button w3-teal"><i class="fa fa-home"></i></a>
+            <a href="index.html#team" class="w3-bar-item w3-button w3-hide-small w3-hover-white">Team</a>
+            <a href="index.html#services" class="w3-bar-item w3-button w3-hide-small w3-hover-white">Services</a>
+            <a href="index.html#contact" class="w3-bar-item w3-button w3-hide-small w3-hover-white">Contact</a>
+            <a href="availability.html" class="w3-bar-item w3-button w3-hide-small w3-hover-white">Parking Availability</a>
+            <a href="login.html" class="w3-bar-item w3-button w3-hide-small w3-hover-white">Login</a>
+        </div>
+    </div>
+
+    <div class="register-container">
+        <h2>Register for ParkSmart</h2>
+        {% if error_message %}
+        <p style="color: red;">{{ error_message }}</p>
+        {% endif %}
+        <form method="POST">
+            <div class="form-columns">
+                <div class="form-column">
+                    <label for="email" class="visually-hidden">Email</label>
+                    <input type="email" id="email" name="email" placeholder="Email" required>
+
+                    <label for="username" class="visually-hidden">Username</label>
+                    <input type="text" id="username" name="username" placeholder="Username" required>
+
+                    <label for="password" class="visually-hidden">Password</label>
+                    <input type="password" id="password" name="password" placeholder="Password" required>
+                </div>
+                <div class="form-column">
+                    <label for="lic" class="visually-hidden">LIC#</label>
+                    <input type="text" id="lic" name="lic" placeholder="License Number" required>
+                    <label for="vehicle-type" class="visually-hidden">Vehicle Type</label>
+                    <select id="vehicle-type" name="vehicle-type" required>
+                        <option value="" disabled selected>Select Vehicle Type</option>
+                        <option value="Car">Car</option>
+                        <option value="Truck">Truck</option>
+                        <option value="Motorcycle">Motorcycle</option>
+                    </select>
+
+                    <label for="color" class="visually-hidden">Car Color</label>
+                    <select id="color" name="color" required>
+                        <option value="" disabled selected>Select Car Color</option>
+                        <option value="Black" style="background-color: black; color: white;">Black</option>
+                        <option value="White" style="background-color: white; color: black;">White</option>
+                        <option value="Gray" style="background-color: gray; color: white;">Gray</option>
+                        <option value="Silver" style="background-color: silver; color: black;">Silver</option>
+                        <option value="Red" style="background-color: red; color: white;">Red</option>
+                        <option value="Blue" style="background-color: blue; color: white;">Blue</option>
+                        <option value="Brown" style="background-color: brown; color: white;">Brown</option>
+                        <option value="Green" style="background-color: green; color: white;">Green</option>
+                        <option value="Orange" style="background-color: orange; color: white;">Orange</option>
+                        <option value="Pink" style="background-color: pink; color: black;">Pink</option>
+                    </select>
+                </div>
+            </div>
+            <button type="submit">Register</button>
+            <a href="login.html">Already have an account? Login</a>
+        </form>
+    </div>
+
+    <script>
+        function w3_open() {
+            var x = document.getElementById("mySidebar");
+            x.style.width = "300px";
+            x.style.paddingTop = "10%";
+            x.style.display = "block";
+        }
+
+        function w3_close() {
+            document.getElementById("mySidebar").style.display = "none";
+        }
+
+        function openNav() {
+            var x = document.getElementById("navDemo");
+            if (x.className.indexOf("w3-show") == -1) {
+                x.className += " w3-show";
+            } else {
+                x.className = x.className.replace(" w3-show", "");
+            }
+        }
+
+    </script>
+</body>
+</html>
