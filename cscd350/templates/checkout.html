@@ -4,6 +4,20 @@
 <meta name="viewport" content="width=device-width, initial-scale=1">
 <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
 <style>
+    .form-column {
+    display: flex;
+    flex-direction: column;
+    width: 48%;
+  }
+
+  .form-column input,
+  .form-column select {
+    width: 100%;
+    padding: 10px;
+    margin: 10px 0;
+    border: 1px solid #ccc;
+    border-radius: 5px;
+  }
 body {
   font-family: Arial;
   font-size: 17px;
@@ -50,7 +64,7 @@ body {
   border-radius: 3px;
 }
 
-input[type=text], select {
+input[type=text] {
   width: 100%;
   margin-bottom: 20px;
   padding: 12px;
@@ -111,13 +125,14 @@ span.price {
 <body>
 
 <h2>Responsive Checkout Form</h2>
-<p>Resize the browser window to see the effect. When the screen is less than 800px wide, make the two columns stack on top of each other instead of next to each other.</p>
 <div class="row">
   <div class="col-75">
     <div class="container">
       <form id="checkout-form">
         <div class="row">
           <div class="col-50">
+
+
             <h3>Billing Address</h3>
             <label for="fname"><i class="fa fa-user"></i> Full Name</label>
             <input type="text" id="fname" name="firstname" placeholder="John M. Doe">
@@ -127,34 +142,6 @@ span.price {
             <input type="text" id="adr" name="address" placeholder="542 W. 15th Street">
             <label for="city"><i class="fa fa-institution"></i> City</label>
             <input type="text" id="city" name="city" placeholder="New York">
-
-            <div class="form-column">
-              <label for="lic" class="visually-hidden">License Number</label>
-              <input type="text" id="lic" name="lic" placeholder="License Number" required>
-
-              <label for="vehicle-type" class="visually-hidden">Vehicle Type</label>
-              <select id="vehicle-type" name="vehicle-type" required>
-                <option value="" disabled selected>Select Vehicle Type</option>
-                <option value="Car">Car</option>
-                <option value="Truck">Truck</option>
-                <option value="Motorcycle">Motorcycle</option>
-              </select>
-
-              <label for="color" class="visually-hidden">Car Color</label>
-              <select id="color" name="color" required>
-                <option value="" disabled selected>Select Car Color</option>
-                <option value="Black" style="background-color: black; color: white;">Black</option>
-                <option value="White" style="background-color: white; color: black;">White</option>
-                <option value="Gray" style="background-color: gray; color: white;">Gray</option>
-                <option value="Silver" style="background-color: silver; color: black;">Silver</option>
-                <option value="Red" style="background-color: red; color: white;">Red</option>
-                <option value="Blue" style="background-color: blue; color: white;">Blue</option>
-                <option value="Brown" style="background-color: brown; color: white;">Brown</option>
-                <option value="Green" style="background-color: green; color: white;">Green</option>
-                <option value="Orange" style="background-color: orange; color: white;">Orange</option>
-                <option value="Pink" style="background-color: pink; color: black;">Pink</option>
-              </select>
-            </div>
 
             <div class="row">
               <div class="col-50">
@@ -195,6 +182,35 @@ span.price {
             </div>
           </div>
         </div>
+
+        <div class="form-column">
+              <label for="lic" class="visually-hidden">License Number</label>
+              <input type="text" id="lic" name="lic" placeholder="License Number" required>
+
+              <label for="vehicle-type" class="visually-hidden">Vehicle Type</label>
+              <select id="vehicle-type" name="vehicle-type" required>
+                <option value="" disabled selected>Select Vehicle Type</option>
+                <option value="Car">Car</option>
+                <option value="Truck">Truck</option>
+                <option value="Motorcycle">Motorcycle</option>
+              </select>
+
+              <label for="color" class="visually-hidden">Car Color</label>
+              <select id="color" name="color" required>
+                <option value="" disabled selected>Select Car Color</option>
+                <option value="Black" style="background-color: black; color: white;">Black</option>
+                <option value="White" style="background-color: white; color: black;">White</option>
+                <option value="Gray" style="background-color: gray; color: white;">Gray</option>
+                <option value="Silver" style="background-color: silver; color: black;">Silver</option>
+                <option value="Red" style="background-color: red; color: white;">Red</option>
+                <option value="Blue" style="background-color: blue; color: white;">Blue</option>
+                <option value="Brown" style="background-color: brown; color: white;">Brown</option>
+                <option value="Green" style="background-color: green; color: white;">Green</option>
+                <option value="Orange" style="background-color: orange; color: white;">Orange</option>
+                <option value="Pink" style="background-color: pink; color: black;">Pink</option>
+              </select>
+            </div>
+
         <label>
           <input type="checkbox" checked="checked" name="sameadr"> Shipping address same as billing
         </label>
@@ -204,13 +220,24 @@ span.price {
   </div>
   <div class="col-25">
     <div class="container">
-      <h4>Cart <span class="price" style="color:black"><i class="fa fa-shopping-cart"></i> <b>4</b></span></h4>
-      <p><a href="#">Parking Spot</a> <span class="price">$15</span></p>
+      <div class="form-column">
+      <p>Parking Spot<span class="price"></span></p>
+      <label for="parking-time">Select Parking Time</label>
+      <select id="parking-time">
+        <option value="30">30 minutes</option>
+        <option value="60">1 hour</option>
+        <option value="90">1.5 hours</option>
+        <option value="120">2 hours</option>
+        <option value="150">2.5 hours</option>
+        <option value="180">3 hours</option>
+        <option value="210">3.5 hours</option>
+        <option value="240">4 hours</option>
+      </select>
       <hr>
-      <p>Total <span class="price" style="color:black"><b>$15</b></span></p>
     </div>
   </div>
-</div>
+  </div>
+
 <script>
   document.addEventListener('DOMContentLoaded', function() {
     const checkoutForm = document.getElementById('checkout-form');
@@ -225,14 +252,14 @@ span.price {
       }
 
       const parkingLotId = 1;  // Default parking lot ID
-      const vehicleId = 1;  // Default vehicle ID
 
       const licenseNumber = document.getElementById('lic').value;
       const vehicleType = document.getElementById('vehicle-type').value;
       const carColor = document.getElementById('color').value;
 
-      const now = new Date();
-      const endT = new Date(now.getTime() + 4 * 60 * 60 * 1000);  // + 4 hours from now
+      const now = new Date( (new Date()).getTime() - 7 * 60 * 60 * 1000);  // Subtract 7 hours from current time to get PST
+      const parkingTime = document.getElementById('parking-time').value;
+      const endT = new Date(now.getTime() + parkingTime * 60 * 1000);  // increment by selected minutes
 
       const startTime = now.toISOString().slice(0, 19).replace('T', ' ');
       const endTime = endT.toISOString().slice(0, 19).replace('T', ' ');
@@ -245,7 +272,6 @@ span.price {
         body: JSON.stringify({
           spot_id: spotId,
           parking_lot_id: parkingLotId,
-          vehicle_id: vehicleId,
           license_number: licenseNumber,
           vehicle_type: vehicleType,
           car_color: carColor,
@@ -259,8 +285,12 @@ span.price {
         localStorage.removeItem('selectedSpotId');
         window.location.href = '/availability.html';
       });
+
+
     });
   });
 </script>
+
+
 </body>
 </html>

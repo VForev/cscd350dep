@@ -1,4 +1,4 @@
-import datetime
+from datetime import datetime
 import os
 
 from flask import Flask, render_template, request, jsonify, session
@@ -46,7 +46,7 @@ def init_db():
 
     cursor.execute('''CREATE TABLE IF NOT EXISTS Vehicle (
     VehicleID INTEGER PRIMARY KEY AUTOINCREMENT,
-    UserID INTEGER NOT NULL,
+    UserID INTEGER,
     LicensePlate TEXT NOT NULL UNIQUE,
     VehicleType TEXT NOT NULL,
     VehicleColor TEXT NOT NULL,
@@ -85,6 +85,20 @@ def index():
 
 @app.route('/availability.html')
 def avl():
+
+    conn = sqlite3.connect('parking.db')
+    cursor = conn.cursor()
+    cursor.execute("SELECT * FROM Reservations")
+
+    res = cursor.fetchall()
+    currentTime = datetime.now().strftime('%Y-%m-%d %H:%M:%S')
+    for r in res:
+        if r[5] < currentTime:
+            cursor.execute("DELETE FROM Reservations WHERE ReservationID = ?", (r[0],))
+
+    conn.commit()
+    conn.close()
+
     if 'username' in session:
         return render_template('userAvailability.html', username=session['username'])
     else:
@@ -137,9 +151,11 @@ def reserve():
     data = request.json
     spot_id = data.get('spot_id')
     parking_lot_id = data.get('parking_lot_id', 1)  # Assuming a default parking lot ID
-    vehicle_id = data.get('vehicle_id', 1)  # Assuming a default vehicle ID
     start_time = data.get('start_time', '2024-01-01 00:00:00')  # Default start time
     end_time = data.get('end_time', '2024-12-31 00:00:00')  # Default end time
+    licenseNum = data.get('license_number', '123456')
+    vehicleType = data.get('vehicle_type', 'Car')
+    vehicleColor = data.get('car_color', 'Black')
 
     conn = sqlite3.connect('parking.db')
     cursor = conn.cursor()
@@ -149,10 +165,14 @@ def reserve():
         userID = cursor.fetchone()[0]
         cursor.execute("SELECT VehicleID FROM Vehicle WHERE UserID = ?", (userID,))
         vehicle_id = cursor.fetchone()[0]
+    else:
+        cursor.execute("INSERT OR IGNORE INTO Vehicle (UserID, LicensePlate, VehicleType, VehicleColor) VALUES (?, ?, ?, ?)", (None, licenseNum, vehicleType, vehicleColor))
+        cursor.execute("SELECT VehicleID FROM Vehicle WHERE LicensePlate = ?", (licenseNum,))
+        vehicle_id = cursor.fetchone()[0]
 
     cursor.execute('''INSERT INTO reservations (SpotID, ParkingLotID, VehicleID, StartTime, EndTime) 
                       VALUES (?, ?, ?, ?, ?)''',
-            (spot_id, parking_lot_id, vehicle_id, start_time, end_time))
+                   (spot_id, parking_lot_id, vehicle_id, start_time, end_time))
     conn.commit()
     conn.close()
 
@@ -325,4 +345,4 @@ def editProfile():
 
 if __name__ == '__main__':
     init_db()
-    app.run(debug=True)
+    app.run(debug=True, host="0.0.0.0", port=8090)

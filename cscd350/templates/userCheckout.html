@@ -4,6 +4,20 @@
 <meta name="viewport" content="width=device-width, initial-scale=1">
 <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
 <style>
+  .form-column {
+    display: flex;
+    flex-direction: column;
+    width: 48%;
+  }
+
+  .form-column input,
+  .form-column select {
+    width: 100%;
+    padding: 10px;
+    margin: 10px 0;
+    border: 1px solid #ccc;
+    border-radius: 5px;
+  }
 body {
   font-family: Arial;
   font-size: 17px;
@@ -111,7 +125,6 @@ span.price {
 <body>
 
 <h2>Responsive Checkout Form</h2>
-<p>Resize the browser window to see the effect. When the screen is less than 800px wide, make the two columns stack on top of each other instead of next to each other.</p>
 <div class="row">
   <div class="col-75">
     <div class="container">
@@ -176,12 +189,23 @@ span.price {
   </div>
   <div class="col-25">
     <div class="container">
-      <h4>Cart <span class="price" style="color:black"><i class="fa fa-shopping-cart"></i> <b>4</b></span></h4>
-      <p><a href="#">Parking Spot</a> <span class="price">$15</span></p>
+      <div class="form-column">
+      <p>Parking Spot<span class="price"></span></p>
+      <label for="parking-time">Select Parking Time</label>
+      <select id="parking-time">
+        <option value="30">30 minutes</option>
+        <option value="60">1 hour</option>
+        <option value="90">1.5 hours</option>
+        <option value="120">2 hours</option>
+        <option value="150">2.5 hours</option>
+        <option value="180">3 hours</option>
+        <option value="210">3.5 hours</option>
+        <option value="240">4 hours</option>
+      </select>
       <hr>
-      <p>Total <span class="price" style="color:black"><b>$15</b></span></p>
     </div>
   </div>
+</div>
 </div>
 <script>
   document.addEventListener('DOMContentLoaded', function() {
@@ -197,13 +221,15 @@ span.price {
       }
 
       const parkingLotId = 1;  // Default parking lot ID
-      const vehicleId = 1;  // Default vehicle ID
+      const vehicleId = 999;  // Default vehicle ID
 
-      const now = new Date();
-      const endT = new Date(now.getTime() + 4 * 60 * 60 * 1000);  // + 4 hours from now
+      const now = new Date( (new Date()).getTime() - 7 * 60 * 60 * 1000);  // Subtract 7 hours from current time to get PST
+      const parkingTime = document.getElementById('parking-time').value;
+      const endT = new Date(now.getTime() + parkingTime * 60 * 1000);  // Calculate end time based on selected parking time
 
       const startTime = now.toISOString().slice(0, 19).replace('T', ' ');
       const endTime = endT.toISOString().slice(0, 19).replace('T', ' ');
+      console.log(startTime)
 
       fetch('/reserve', {
         method: 'POST',
@@ -215,7 +241,7 @@ span.price {
           parking_lot_id: parkingLotId,
           vehicle_id: vehicleId,
           start_time: startTime,
-          end_time: endTime
+          end_time: endTime  // Send calculated end time to the server
         }),
       })
       .then(response => response.json())
@@ -227,5 +253,6 @@ span.price {
     });
   });
 </script>
+
 </body>
 </html>
